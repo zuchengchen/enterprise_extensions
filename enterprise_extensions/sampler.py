@@ -322,6 +322,20 @@ class JumpProposal(object):
             q[idx] = np.random.uniform(0, 10)
 
         return q, 0
+    
+    def draw_from_polar_log_uniform_distribution(self, x, iter, beta):
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+        polnames = ['log10_A_TT', 'log10_A_ST', 'log10_A_VL', 'log10_A_SL']
+        for pol in list(set(polnames) & set(self.pnames)):
+            idx = self.pnames.index(pol)
+            q[idx] = np.random.uniform(-20, -11)
+
+        return q, 0
+
 
     def draw_from_ephem_prior(self, x, iter, beta):
 
@@ -821,6 +835,10 @@ def setup_sampler(pta, outdir='chains', resume=False, empirical_distr=None):
     if 'log10Apol_tt' in pta.param_names:
         print('Adding alternative GW-polarization uniform distribution draws...\n')
         sampler.addProposalToCycle(jp.draw_from_altpol_log_uniform_distribution, 10)
+    
+    print('Adding alternative GW-polarization uniform distribution draws...\n')
+    sampler.addProposalToCycle(jp.draw_from_polar_log_uniform_distribution, 10)
+    
 
     # BWM prior draw
     if 'bwm_log10_A' in pta.param_names:
