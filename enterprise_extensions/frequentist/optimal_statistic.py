@@ -60,6 +60,8 @@ class OptimalStatistic(object):
             self.orf = utils.dipole_orf
         elif orf == 'monopole':
             self.orf = utils.monopole_orf
+        elif orf == 'st':
+            self.orf = utils.st_orf
         else:
             raise ValueError('Unknown ORF!')
 
