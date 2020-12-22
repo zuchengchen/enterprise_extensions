@@ -541,7 +541,8 @@ def model_general(psrs, tm_var=False, tm_linear=False, tmparam_list=None,
                   gequad=False, dm_chrom=False, dmchrom_psd='powerlaw',
                   dmchrom_idx=4, red_select=None, red_breakflat=False,
                   red_breakflat_fq=None, coefficients=False, pshift=False,
-                  select='backend'):
+                  select='backend',
+                 gw_name="gw"):
     """
     Reads in list of enterprise Pulsar instance and returns a PTA
     instantiated with model 2A from the analysis paper:
@@ -662,14 +663,14 @@ def model_general(psrs, tm_var=False, tm_linear=False, tmparam_list=None,
                                     Tspan=Tspan,
                                     components=common_components,
                                     coefficients=coefficients, pshift=pshift,
-                                    gamma_val=gamma_common, name='gw')
+                                    gamma_val=gamma_common, name=gw_name)
     elif orf == 'hd':
         s += common_red_noise_block(psd=common_psd, prior=amp_prior_common,
                                     Tspan=Tspan,
                                     components=common_components,
                                     coefficients=coefficients,
                                     gamma_val=gamma_common, orf='hd',
-                                    name='gw')
+                                    name=gw_name)
 
     # DM variations
     if dm_var:
