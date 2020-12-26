@@ -275,6 +275,9 @@ class HyperModel(object):
                 par_names=[str(p).split(':')[0] for 
                            p in list(self.params) 
                            if 'gw' in str(p)]), 10)
+            
+        print('Adding alternative GW-polarization uniform distribution draws...\n')
+        sampler.addProposalToCycle(jp.draw_from_polar_log_uniform_distribution, 10)
         
         # Model index distribution draw
         if sample_nmodel:

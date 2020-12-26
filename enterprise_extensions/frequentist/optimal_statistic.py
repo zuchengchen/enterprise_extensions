@@ -52,6 +52,9 @@ class OptimalStatistic(object):
 
         # pulsar locations
         self.psrlocs = [p.pos for p in psrs]
+        
+        # pulsar distances
+        self.psrdists = [p.pdist for p in psrs]
 
         # overlap reduction function
         if orf == 'hd':
@@ -60,12 +63,12 @@ class OptimalStatistic(object):
             self.orf = utils.dipole_orf
         elif orf == 'monopole':
             self.orf = utils.monopole_orf
-        elif orf == 'st':
-            self.orf = utils.st_orf
+        elif orf == 'ST':
+            self.orf = utils.ST_orf
         else:
             raise ValueError('Unknown ORF!')
 
-    def compute_os(self, params=None):
+    def compute_os(self, params=None, gamma=13/3):
         """
         Computes the optimal statistic values given an
         `enterprise` parameter dictionary.
@@ -114,10 +117,12 @@ class OptimalStatistic(object):
 
         npsr = len(self.pta._signalcollections)
         rho, sig, ORF, xi = [], [], [], []
+        
+        yr = 365.25 * 24.0 * 3600.0
         for ii in range(npsr):
             for jj in range(ii+1, npsr):
 
-                phiIJ = utils.powerlaw(self.freqs, log10_A=0, gamma=13/3)
+                phiIJ = utils.powerlaw(self.freqs, log10_A=0, gamma=gamma)
 
                 top = np.dot(X[ii], phiIJ * X[jj])
                 bot = np.trace(np.dot(Z[ii]*phiIJ[None,:], Z[jj]*phiIJ[None,:]))
@@ -126,11 +131,13 @@ class OptimalStatistic(object):
                 rho.append(top / bot)
                 sig.append(1 / np.sqrt(bot))
 
-                # Overlap reduction function for PSRs ii, jj
-                ORF.append(self.orf(self.psrlocs[ii], self.psrlocs[jj]))
-
                 # angular separation
-                xi.append(np.arccos(np.dot(self.psrlocs[ii], self.psrlocs[jj])))
+                xi0 = np.arccos(np.dot(self.psrlocs[ii], self.psrlocs[jj]))
+                xi0 = round(xi0, 10)
+                xi.append(xi0)
+
+                # Overlap reduction function for PSRs ii, jj
+                ORF.append(self.orf(xi0, self.psrdists[ii], self.psrdists[jj], 1/yr))
 
         rho = np.array(rho)
         sig = np.array(sig)
@@ -189,7 +196,7 @@ class OptimalStatistic(object):
         for sc in self.pta._signalcollections:
             ind = []
             for signal, idx in sc._idx.items():
-                if signal.signal_name == 'red noise' and signal.signal_id =='gw':
+                if signal.signal_name == 'red noise' and signal.signal_id in ['gw', 'red_noise']:
                     ind.append(idx)
             ix = np.unique(np.concatenate(ind))
             Fmats.append(sc.get_basis(params=params)[:, ix])
@@ -199,9 +206,9 @@ class OptimalStatistic(object):
     def _get_freqs(self,psrs):
         """ Hackish way to get frequency vector."""
         for sig in self.pta._signalcollections[0]._signals:
-            if sig.signal_name == 'red noise' and sig.signal_id == 'gw':
+            if sig.signal_name == 'red noise' and sig.signal_id in ['gw', 'red_noise']:
                 sig._construct_basis()
-                freqs = np.array(sig._labels[''])
+                freqs = np.array(sig._labels[''])    
                 break
         return freqs
 
