@@ -323,16 +323,65 @@ class JumpProposal(object):
 
         return q, 0
     
-    def draw_from_polar_log_uniform_distribution(self, x, iter, beta):
+#     def draw_from_polar_log_uniform_distribution(self, x, iter, beta):
+
+#         q = x.copy()
+#         lqxy = 0
+
+#         # draw parameter from signal model
+#         polnames = ['log10_A_TT', 'log10_A_ST', 'log10_A_VL', 'log10_A_SL']
+#         for pol in list(set(polnames) & set(self.pnames)):
+#             idx = self.pnames.index(pol)
+#             if pol == 'log10_A_TT' or pol == 'log10_A_ST':             
+#                 q[idx] = np.random.uniform(-18, -14)
+#             elif pol == 'log10_A_VL':
+#                 q[idx] = np.random.uniform(-19, -15)
+#             elif pol == 'log10_A_SL':
+#                 q[idx] = np.random.uniform(-20, -16)
+
+#         return q, 0
+    
+    def draw_from_TT_log_uniform_distribution(self, x, iter, beta):
 
         q = x.copy()
         lqxy = 0
 
         # draw parameter from signal model
-        polnames = ['log10_A_TT', 'log10_A_ST', 'log10_A_VL', 'log10_A_SL']
-        for pol in list(set(polnames) & set(self.pnames)):
-            idx = self.pnames.index(pol)
-            q[idx] = np.random.uniform(-20, -11)
+        idx = self.pnames.index('log10_A_TT')
+        q[idx] = np.random.uniform(-18, -14)
+
+        return q, 0
+    
+    def draw_from_ST_log_uniform_distribution(self, x, iter, beta):
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+        idx = self.pnames.index('log10_A_ST')
+        q[idx] = np.random.uniform(-18, -14)
+
+        return q, 0
+    
+    def draw_from_VL_log_uniform_distribution(self, x, iter, beta):
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+        idx = self.pnames.index('log10_A_VL')
+        q[idx] = np.random.uniform(-19, -15)
+
+        return q, 0
+
+    def draw_from_SL_log_uniform_distribution(self, x, iter, beta):
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+        idx = self.pnames.index('log10_A_SL')
+        q[idx] = np.random.uniform(-20, -16)
 
         return q, 0
 
@@ -836,9 +885,28 @@ def setup_sampler(pta, outdir='chains', resume=False, empirical_distr=None):
         print('Adding alternative GW-polarization uniform distribution draws...\n')
         sampler.addProposalToCycle(jp.draw_from_altpol_log_uniform_distribution, 10)
     
-    print('Adding alternative GW-polarization uniform distribution draws...\n')
-    sampler.addProposalToCycle(jp.draw_from_polar_log_uniform_distribution, 10)
-    
+#     print('Adding alternative GW-polarization uniform distribution draws...\n')
+#     sampler.addProposalToCycle(jp.draw_from_polar_log_uniform_distribution, 10)
+
+    # TT uniform distribution draw
+    if 'log10_A_TT' in pta.param_names:
+        print('Adding TT uniform distribution draws...\n')
+        sampler.addProposalToCycle(jp.draw_from_TT_log_uniform_distribution, 10)
+        
+    # ST uniform distribution draw
+    if 'log10_A_ST' in pta.param_names:
+        print('Adding ST uniform distribution draws...\n')
+        sampler.addProposalToCycle(jp.draw_from_ST_log_uniform_distribution, 10)
+        
+    # VL uniform distribution draw
+    if 'log10_A_VL' in pta.param_names:
+        print('Adding VL uniform distribution draws...\n')
+        sampler.addProposalToCycle(jp.draw_from_VL_log_uniform_distribution, 10)
+        
+    # SL uniform distribution draw
+    if 'log10_A_SL' in pta.param_names:
+        print('Adding SL uniform distribution draws...\n')
+        sampler.addProposalToCycle(jp.draw_from_SL_log_uniform_distribution, 10)
 
     # BWM prior draw
     if 'bwm_log10_A' in pta.param_names:
