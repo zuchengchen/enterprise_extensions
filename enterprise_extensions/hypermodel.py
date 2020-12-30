@@ -277,22 +277,22 @@ class HyperModel(object):
                            if 'gw' in str(p)]), 10)
             
         # TT uniform distribution draw
-        if 'log10_A_TT' in pta.param_names:
+        if 'log10_A_TT' in self.param_names:
             print('Adding TT uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_TT_log_uniform_distribution, 10)
             
         # ST uniform distribution draw
-        if 'log10_A_ST' in pta.param_names:
+        if 'log10_A_ST' in self.param_names:
             print('Adding ST uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_ST_log_uniform_distribution, 10)
         
         # VL uniform distribution draw
-        if 'log10_A_VL' in pta.param_names:
+        if 'log10_A_VL' in self.param_names:
             print('Adding VL uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_VL_log_uniform_distribution, 10)
         
         # SL uniform distribution draw
-        if 'log10_A_SL' in pta.param_names:
+        if 'log10_A_SL' in self.param_names:
             print('Adding SL uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_SL_log_uniform_distribution, 10)
             
