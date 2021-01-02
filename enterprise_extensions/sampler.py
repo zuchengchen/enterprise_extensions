@@ -341,6 +341,17 @@ class JumpProposal(object):
 
 #         return q, 0
     
+    def draw_from_UCP_log_uniform_distribution(self, x, iter, beta):
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+        idx = self.pnames.index('UCP_log10_A')
+        q[idx] = np.random.uniform(-18, -11)
+
+        return q, 0
+    
     def draw_from_TT_log_uniform_distribution(self, x, iter, beta):
 
         q = x.copy()

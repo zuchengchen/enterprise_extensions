@@ -275,6 +275,11 @@ class HyperModel(object):
                 par_names=[str(p).split(':')[0] for 
                            p in list(self.params) 
                            if 'gw' in str(p)]), 10)
+        
+        # UCP uniform distribution draw
+        if 'UCP_log10_A' in self.param_names:
+            print('Adding UCP uniform distribution draws...\n')
+            sampler.addProposalToCycle(jp.draw_from_UCP_log_uniform_distribution, 10)
             
         # TT uniform distribution draw
         if 'log10_A_TT' in self.param_names:
