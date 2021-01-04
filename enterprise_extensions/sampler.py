@@ -51,6 +51,7 @@ class JumpProposal(object):
             try:
                 with open(empirical_distr, 'rb') as f:
                     pickled_distr = pickle.load(f)
+                    print(f"Using empirical distribution {empirical_distr}")
             except:
                 try:
                     with open(empirical_distr, 'rb') as f:
