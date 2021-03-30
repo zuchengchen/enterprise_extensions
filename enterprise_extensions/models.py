@@ -2111,7 +2111,7 @@ def model_bwm(psrs, noisedict=None, white_vary=False, tm_svd=False,
 def model_cw(psrs, upper_limit=False, rn_psd='powerlaw', noisedict=None,
              white_vary=False, components=30, bayesephem=False, skyloc=None,
              log10_F=None, ecc=False, psrTerm=False, is_wideband=False,
-             use_dmdata=False):
+             use_dmdata=False, select='backend'):
     """
     Reads in list of enterprise Pulsar instance and returns a PTA
     instantiated with CW model:
@@ -2212,10 +2212,11 @@ def model_cw(psrs, upper_limit=False, rn_psd='powerlaw', noisedict=None,
     for p in psrs:
         if 'NANOGrav' in p.flags['pta'] and not is_wideband:
             s2 = s + white_noise_block(vary=white_vary, inc_ecorr=True,
-                    gp_ecorr=True)
+                    select=select)
             models.append(s2(p))
         else:
-            s3 = s + white_noise_block(vary=white_vary, inc_ecorr=False)
+            s3 = s + white_noise_block(vary=white_vary, inc_ecorr=False,
+                    select=select)
             models.append(s3(p))
 
     # set up PTA

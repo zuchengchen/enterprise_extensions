@@ -301,8 +301,12 @@ class HyperModel(object):
             print('Adding SL uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_SL_log_uniform_distribution, 10)
             
+            
 #         print('Adding alternative GW-polarization uniform distribution draws...\n')
 #         sampler.addProposalToCycle(jp.draw_from_polar_log_uniform_distribution, 10)
+        if 'bin_orf_A1' in self.param_names:
+            print('Adding bin-orf prior draws...\n')
+            sampler.addProposalToCycle(jp.draw_from_bin_orf_uniform_distribution, 10)
         
         # Model index distribution draw
         if sample_nmodel:

@@ -299,6 +299,36 @@ class JumpProposal(object):
         q[idx] = np.random.uniform(-18, -11)
 
         return q, 0
+    
+    def draw_from_bin_orf_uniform_distribution(self, x, iter, beta):
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+        idx = self.pnames.index('bin_orf_A1')
+        q[idx] = np.random.uniform(-1, 1)
+        
+        idx = self.pnames.index('bin_orf_A2')
+        q[idx] = np.random.uniform(-1, 1)
+        
+        idx = self.pnames.index('bin_orf_A3')
+        q[idx] = np.random.uniform(-1, 1)
+        
+        idx = self.pnames.index('bin_orf_A4')
+        q[idx] = np.random.uniform(-1, 1)
+        
+        idx = self.pnames.index('bin_orf_A5')
+        q[idx] = np.random.uniform(-1, 1)
+        
+        idx = self.pnames.index('bin_orf_A6')
+        q[idx] = np.random.uniform(-1, 1)
+        
+        idx = self.pnames.index('bin_orf_A7')
+        q[idx] = np.random.uniform(-1, 1)
+
+        return q, 0
+    
 
     def draw_from_altpol_log_uniform_distribution(self, x, iter, beta):
 
@@ -473,7 +503,7 @@ class JumpProposal(object):
         lqxy = 0
 
         # draw parameter from signal model
-        idx = self.pnames.index('log10_h')
+        idx = self.pnames.index('cw_log10_h')
         q[idx] = np.random.uniform(-18, -11)
 
         return q, 0
@@ -677,11 +707,11 @@ class JumpProposal(object):
         #draw skylocation and frequency from f-stat map
         accepted = False
         while accepted==False:
-            log_f_new = self.params[self.pimap['log10_fgw']].sample()
+            log_f_new = self.params[self.pimap['cw_log10_fgw']].sample()
             f_idx = (np.abs(np.log10(self.fe_freqs) - log_f_new)).argmin()
 
-            gw_theta = np.arccos(self.params[self.pimap['cos_gwtheta']].sample())
-            gw_phi = self.params[self.pimap['gwphi']].sample()
+            gw_theta = np.arccos(self.params[self.pimap['cw_cos_gwtheta']].sample())
+            gw_phi = self.params[self.pimap['cw_gwphi']].sample()
             hp_idx = hp.ang2pix(hp.get_nside(self.fe), gw_theta, gw_phi)
 
             fe_new_point = self.fe[f_idx, hp_idx]
@@ -689,43 +719,43 @@ class JumpProposal(object):
                 accepted = True
 
         #draw other parameters from prior
-        cos_inc = self.params[self.pimap['cos_inc']].sample()
-        psi = self.params[self.pimap['psi']].sample()
-        phase0 = self.params[self.pimap['phase0']].sample()
-        log10_h = self.params[self.pimap['log10_h']].sample()
+        cos_inc = self.params[self.pimap['cw_cos_inc']].sample()
+        psi = self.params[self.pimap['cw_psi']].sample()
+        phase0 = self.params[self.pimap['cw_phase0']].sample()
+        log10_h = self.params[self.pimap['cw_log10_h']].sample()
         
 
         #put new parameters into q
         signal_name = 'cw'
-        for param_name, new_param in zip(['log10_fgw','gwphi','cos_gwtheta','cos_inc','psi','phase0','log10_h'],
+        for param_name, new_param in zip(['cw_log10_fgw','cw_gwphi','cw_cos_gwtheta','cw_cos_inc','cw_psi','cw_phase0','cw_log10_h'],
                                            [log_f_new, gw_phi, np.cos(gw_theta), cos_inc, psi, phase0, log10_h]):
             q[self.pimap[param_name]] = new_param
         
         #calculate Hastings ratio
-        log_f_old = x[self.pimap['log10_fgw']]
+        log_f_old = x[self.pimap['cw_log10_fgw']]
         f_idx_old = (np.abs(np.log10(self.fe_freqs) - log_f_old)).argmin()
         
-        gw_theta_old = np.arccos(x[self.pimap['cos_gwtheta']])
-        gw_phi_old = x[self.pimap['gwphi']]
+        gw_theta_old = np.arccos(x[self.pimap['cw_cos_gwtheta']])
+        gw_phi_old = x[self.pimap['cw_gwphi']]
         hp_idx_old = hp.ang2pix(hp.get_nside(self.fe), gw_theta_old, gw_phi_old)
         
         fe_old_point = self.fe[f_idx_old, hp_idx_old]
         if fe_old_point>fe_limit:
             fe_old_point = fe_limit
             
-        log10_h_old = x[self.pimap['log10_h']]
-        phase0_old = x[self.pimap['phase0']]
-        psi_old = x[self.pimap['psi']]
-        cos_inc_old = x[self.pimap['cos_inc']]
+        log10_h_old = x[self.pimap['cw_log10_h']]
+        phase0_old = x[self.pimap['cw_phase0']]
+        psi_old = x[self.pimap['cw_psi']]
+        cos_inc_old = x[self.pimap['cw_cos_inc']]
         
-        hastings_extra_factor = self.params[self.pimap['log10_h']].get_pdf(log10_h_old)
-        hastings_extra_factor *= 1/self.params[self.pimap['log10_h']].get_pdf(log10_h)
-        hastings_extra_factor = self.params[self.pimap['phase0']].get_pdf(phase0_old)
-        hastings_extra_factor *= 1/self.params[self.pimap['phase0']].get_pdf(phase0)
-        hastings_extra_factor = self.params[self.pimap['psi']].get_pdf(psi_old)
-        hastings_extra_factor *= 1/self.params[self.pimap['psi']].get_pdf(psi)
-        hastings_extra_factor = self.params[self.pimap['cos_inc']].get_pdf(cos_inc_old)
-        hastings_extra_factor *= 1/self.params[self.pimap['cos_inc']].get_pdf(cos_inc)        
+        hastings_extra_factor = self.params[self.pimap['cw_log10_h']].get_pdf(log10_h_old)
+        hastings_extra_factor *= 1/self.params[self.pimap['cw_log10_h']].get_pdf(log10_h)
+        hastings_extra_factor = self.params[self.pimap['cw_phase0']].get_pdf(phase0_old)
+        hastings_extra_factor *= 1/self.params[self.pimap['cw_phase0']].get_pdf(phase0)
+        hastings_extra_factor = self.params[self.pimap['cw_psi']].get_pdf(psi_old)
+        hastings_extra_factor *= 1/self.params[self.pimap['cw_psi']].get_pdf(psi)
+        hastings_extra_factor = self.params[self.pimap['cw_cos_inc']].get_pdf(cos_inc_old)
+        hastings_extra_factor *= 1/self.params[self.pimap['cw_cos_inc']].get_pdf(cos_inc)        
         
         lqxy = np.log(fe_old_point/fe_new_point * hastings_extra_factor)
 
@@ -774,9 +804,9 @@ def get_cw_groups(pta):
     These groups should be appended to the usual get_parameter_groups()
     output.
     """
-    ang_pars = ['costheta', 'phi', 'cosinc', 'phase0', 'psi']
-    mfdh_pars = ['log10_Mc', 'log10_fgw', 'log10_dL', 'log10_h']
-    freq_pars = ['log10_Mc', 'log10_fgw', 'pdist', 'pphase']
+    ang_pars = ['cw_costheta', 'cw_phi', 'cw_cosinc', 'cw_phase0', 'cw_psi']
+    mfdh_pars = ['cw_log10_Mc', 'cw_log10_fgw', 'cw_log10_dL', 'cw_log10_h']
+    freq_pars = ['cw_log10_Mc', 'cw_log10_fgw', 'cw_pdist', 'cw_pphase']
 
     groups = []
     for pars in [ang_pars, mfdh_pars, freq_pars]:
@@ -932,5 +962,11 @@ def setup_sampler(pta, outdir='chains', resume=False, empirical_distr=None):
     if 'cw_log10_Mc' in pta.param_names:
         print('Adding CW prior draws...\n')
         sampler.addProposalToCycle(jp.draw_from_cw_distribution, 10)
+        
+    # SL uniform distribution draw
+    if 'bin_orf_A1' in pta.param_names:
+        print('Adding bin-orf prior draws...\n')
+        sampler.addProposalToCycle(jp.draw_from_bin_orf_uniform_distribution, 10)
+        
 
     return sampler
