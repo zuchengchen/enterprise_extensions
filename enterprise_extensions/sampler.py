@@ -326,6 +326,9 @@ class JumpProposal(object):
         
         idx = self.pnames.index('bin_orf_A7')
         q[idx] = np.random.uniform(-1, 1)
+        
+        idx = self.pnames.index('log10_A_bin-orf')
+        q[idx] = np.random.uniform(-18, -14)
 
         return q, 0
     
