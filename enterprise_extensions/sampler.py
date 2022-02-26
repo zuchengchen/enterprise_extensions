@@ -529,6 +529,39 @@ class JumpProposal(object):
         q[idx] = np.random.uniform(-20, -16)
 
         return q, 0
+    
+    def draw_from_log_A_sigwlog_uniform_distribution(self, x, iter, beta):
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+        idx = self.pnames.index('log_A_sigwlog')
+        q[idx] = np.random.uniform(-3.0, 1.0)
+
+        return q, 0
+    
+    def draw_from_log_fstar_sigwlog_uniform_distribution(self, x, iter, beta):
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+        idx = self.pnames.index('log_fstar_sigwlog')
+        q[idx] = np.random.uniform(-9.0, -5.0)
+
+        return q, 0
+    
+    def draw_from_log_sigma_sigwlog_uniform_distribution(self, x, iter, beta):
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+        idx = self.pnames.index('log_sigma_sigwlog')
+        q[idx] = np.random.uniform(-2.0, 2.0)
+
+        return q, 0
 
 
     def draw_from_ephem_prior(self, x, iter, beta):

@@ -312,6 +312,19 @@ class HyperModel(object):
             print('Adding SL uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_SL_log_uniform_distribution, 10)
             
+        ## for sigw
+        if 'log_A_sigwlog' in self.param_names:
+            print('Adding log_A_sigwlog uniform distribution draws...\n')
+            sampler.addProposalToCycle(jp.draw_from_log_A_sigwlog_uniform_distribution, 10)
+            
+        if 'log_fstar_sigwlog' in self.param_names:
+            print('Adding log_fstar_sigwlog uniform distribution draws...\n')
+            sampler.addProposalToCycle(jp.draw_from_log_fstar_sigwlog_uniform_distribution, 10)
+        
+        if 'log_sigma_sigwlog' in self.param_names:
+            print('Adding log_sigma_sigwlog uniform distribution draws...\n')
+            sampler.addProposalToCycle(jp.draw_from_log_sigma_sigwlog_uniform_distribution, 10)
+            
             
 #         print('Adding alternative GW-polarization uniform distribution draws...\n')
 #         sampler.addProposalToCycle(jp.draw_from_polar_log_uniform_distribution, 10)
