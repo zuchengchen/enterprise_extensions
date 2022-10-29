@@ -117,7 +117,7 @@ class HyperModel(object):
             groups.extend(get_parameter_groups(p))
         list(np.unique(groups))
 
-        groups.extend([[len(self.param_names)-1]])  # nmodel
+        groups.extend([[len(self.param_names) - 1]])  # nmodel
 
         return groups
 
@@ -148,7 +148,7 @@ class HyperModel(object):
         q = x.copy()
 
         idx = list(self.param_names).index('nmodel')
-        q[idx] = np.random.uniform(-0.5, self.num_models-0.5)
+        q[idx] = np.random.uniform(-0.5, self.num_models - 0.5)
 
         lqxy = 0
 
@@ -179,8 +179,8 @@ class HyperModel(object):
         ndim = len(self.param_names)
 
         # initial jump covariance matrix
-        if os.path.exists(outdir+'/cov.npy'):
-            cov = np.load(outdir+'/cov.npy')
+        if os.path.exists(outdir + '/cov.npy'):
+            cov = np.load(outdir + '/cov.npy')
         else:
             cov = np.diag(np.ones(ndim) * 1.0**2)  # used to be 0.1
 
@@ -275,9 +275,14 @@ class HyperModel(object):
             sampler.addProposalToCycle(jp.draw_from_fdm_prior, 10)
 
         # CW prior draw
-        if 'cw_log10_h' in self.param_names:
+        # if 'cw_log10_h' in self.param_names:
+        #     print('Adding CW prior draws...\n')
+        #     sampler.addProposalToCycle(jp.draw_from_cw_log_uniform_distribution, 10)
+
+        # CW prior draw
+        if 'cw_log10_Mc' in self.param_names:
             print('Adding CW prior draws...\n')
-            sampler.addProposalToCycle(jp.draw_from_cw_log_uniform_distribution, 10)
+            sampler.addProposalToCycle(jp.draw_from_cw_prior, 10)
 
         # Prior distribution draw for parameters named GW
         if any([str(p).split(':')[0] for p in list(self.params) if 'gw' in str(p)]):
@@ -286,46 +291,46 @@ class HyperModel(object):
                 par_names=[str(p).split(':')[0] for
                            p in list(self.params)
                            if 'gw' in str(p)]), 10)
-        
+
         # UCP uniform distribution draw
         if 'UCP_log10_A' in self.param_names:
             print('Adding UCP uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_UCP_log_uniform_distribution, 10)
-            
+
         # TT uniform distribution draw
         if 'log10_A_TT' in self.param_names:
             print('Adding TT uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_TT_log_uniform_distribution, 10)
-            
+
         # ST uniform distribution draw
         if 'log10_A_ST' in self.param_names:
             print('Adding ST uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_ST_log_uniform_distribution, 10)
-        
+
         # VL uniform distribution draw
         if 'log10_A_VL' in self.param_names:
             print('Adding VL uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_VL_log_uniform_distribution, 10)
-        
+
         # SL uniform distribution draw
         if 'log10_A_SL' in self.param_names:
             print('Adding SL uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_SL_log_uniform_distribution, 10)
-            
-        ## for sigw
+
+        # for sigw
         if 'log_A_sigwlog' in self.param_names:
             print('Adding log_A_sigwlog uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_log_A_sigwlog_uniform_distribution, 10)
-            
+
         if 'log_fstar_sigwlog' in self.param_names:
             print('Adding log_fstar_sigwlog uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_log_fstar_sigwlog_uniform_distribution, 10)
-        
+
         if 'log_sigma_sigwlog' in self.param_names:
             print('Adding log_sigma_sigwlog uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_log_sigma_sigwlog_uniform_distribution, 10)
-            
-            
+
+
 #         print('Adding alternative GW-polarization uniform distribution draws...\n')
 #         sampler.addProposalToCycle(jp.draw_from_polar_log_uniform_distribution, 10)
         if 'bin_orf_A1' in self.param_names:
@@ -357,7 +362,7 @@ class HyperModel(object):
 
         wave = 0
         pta = self.models[model]
-        model_chain = chain[np.rint(chain[:, -5])==model, :]
+        model_chain = chain[np.rint(chain[:, -5]) == model, :]
 
         # get parameter dictionary
         if mle:
@@ -384,15 +389,15 @@ class HyperModel(object):
 
         try:
             u, s, _ = sl.svd(Sigma)
-            mn = np.dot(u, np.dot(u.T, d)/s)
-            Li = u * np.sqrt(1/s)
+            mn = np.dot(u, np.dot(u.T, d) / s)
+            Li = u * np.sqrt(1 / s)
         except np.linalg.LinAlgError:
 
             Q, R = sl.qr(Sigma)
             Sigi = sl.solve(R, Q.T)
             mn = np.dot(Sigi, d)
             u, s, _ = sl.svd(Sigi)
-            Li = u * np.sqrt(1/s)
+            Li = u * np.sqrt(1 / s)
 
         b = mn + np.dot(Li, np.random.randn(Li.shape[0]))
 
@@ -404,7 +409,7 @@ class HyperModel(object):
                 if sig.signal_type == 'basis':
                     basis = sig.get_basis(params=params)
                     nb = basis.shape[1]
-                    pardict[sig.signal_name] = np.arange(ntot, nb+ntot)
+                    pardict[sig.signal_name] = np.arange(ntot, nb + ntot)
                     ntot += nb
 
         # DM quadratic + GP

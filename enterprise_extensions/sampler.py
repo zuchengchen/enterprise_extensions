@@ -1181,7 +1181,7 @@ def setup_sampler(pta, outdir='chains', resume=False,
         sampler.addProposalToCycle(jp.draw_from_cw_log_uniform_distribution, 10)
     if 'cw_log10_Mc' in pta.param_names:
         print('Adding CW prior draws...\n')
-        sampler.addProposalToCycle(jp.draw_from_cw_distribution, 10)
+        sampler.addProposalToCycle(jp.draw_from_cw_prior, 10)
         
     # SL uniform distribution draw
     if 'bin_orf_A1' in pta.param_names:
