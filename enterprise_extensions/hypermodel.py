@@ -331,9 +331,21 @@ class HyperModel(object):
             sampler.addProposalToCycle(jp.draw_from_log_sigma_sigwlog_uniform_distribution, 10)
 
         # for domain wall
-        if 'log_A_sigwlog' in self.param_names:
-            print('Adding log_A_sigwlog uniform distribution draws...\n')
-            sampler.addProposalToCycle(jp.draw_from_log_A_sigwlog_uniform_distribution, 10)
+        if 'log_TS_DR' in self.param_names:
+            print('Adding domain wall DR uniform distribution draws...\n')
+            sampler.addProposalToCycle(jp.draw_from_DWDR_uniform_distribution, 10)
+
+        if 'log_TS_SM' in self.param_names:
+            print('Adding domain wall DR uniform distribution draws...\n')
+            sampler.addProposalToCycle(jp.draw_from_DWSM_uniform_distribution, 10)
+
+        if 'log_TS_SM_2' in self.param_names:
+            print('Adding domain wall DR uniform distribution draws...\n')
+            sampler.addProposalToCycle(jp.draw_from_DWSM2_uniform_distribution, 10)
+
+        if 'log_TS_HA' in self.param_names:
+            print('Adding domain wall DR uniform distribution draws...\n')
+            sampler.addProposalToCycle(jp.draw_from_DWHA_uniform_distribution, 10)
 
 
 #         print('Adding alternative GW-polarization uniform distribution draws...\n')
