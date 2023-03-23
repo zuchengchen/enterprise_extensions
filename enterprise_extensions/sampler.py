@@ -377,7 +377,7 @@ class JumpProposal(object):
         gw_par = np.random.choice(gw_pars)
         idx = self.pnames.index(gw_par)
 
-        q[idx] = np.random.uniform(-18, -14)
+        q[idx] = np.random.uniform(-18, -11)
 
         return q, 0
 
@@ -563,6 +563,92 @@ class JumpProposal(object):
 
         return q, 0
 
+    def draw_from_DWDR_uniform_distribution(self, x, iter, beta):
+        # domain wall DR scenario
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+        idx = self.pnames.index('log_TS_DR')
+        q[idx] = np.random.uniform(-3.0, 5.0)
+        
+        idx = self.pnames.index('log_dNeff_DR')
+        q[idx] = np.random.uniform(-3.0, np.log10(0.39))
+        
+        idx = self.pnames.index('beta_DR')
+        q[idx] = np.random.uniform(0.5, 1.0)
+        
+        idx = self.pnames.index('delta_DR')
+        q[idx] = np.random.uniform(0.3, 3)
+
+        return q, 0
+
+    def draw_from_DWSM_uniform_distribution(self, x, iter, beta):
+        # domain wall SM scenario
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+        idx = self.pnames.index('log_TS_SM')
+        q[idx] = np.random.uniform(-4.0, 5.0)
+        
+        idx = self.pnames.index('log_aS_SM')
+        q[idx] = np.random.uniform(-3.0, np.log10(0.3))
+        
+        idx = self.pnames.index('beta_SM')
+        q[idx] = np.random.uniform(0.5, 1.0)
+        
+        idx = self.pnames.index('delta_SM')
+        q[idx] = np.random.uniform(0.3, 3)
+
+        return q, 0
+
+    def draw_from_DWSM2_uniform_distribution(self, x, iter, beta):
+        # domain wall SM scenario
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+        idx = self.pnames.index('log_TS_SM_2')
+        q[idx] = np.random.uniform(-4.0, 5.0)
+        
+        idx = self.pnames.index('log_sigma_SM_2')
+        q[idx] = np.random.uniform(10, 18)
+        
+        idx = self.pnames.index('beta_SM_2')
+        q[idx] = np.random.uniform(0.5, 1.0)
+        
+        idx = self.pnames.index('delta_SM_2')
+        q[idx] = np.random.uniform(0.3, 3)
+
+        return q, 0
+
+    def draw_from_DWHA_uniform_distribution(self, x, iter, beta):
+        # domain wall SM scenario
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+        idx = self.pnames.index('log_TS_HA')
+        q[idx] = np.random.uniform(-4.0, 5.0)
+        
+        idx = self.pnames.index('log_Fa_HA')
+        q[idx] = np.random.uniform(2, 9)
+        
+        idx = self.pnames.index('log_ma_HA')
+        q[idx] = np.random.uniform(-4, 4)
+
+        idx = self.pnames.index('beta_HA')
+        q[idx] = np.random.uniform(0.5, 1.0)
+        
+        idx = self.pnames.index('delta_HA')
+        q[idx] = np.random.uniform(0.3, 3)
+
+        return q, 0
 
     def draw_from_ephem_prior(self, x, iter, beta):
 
@@ -653,6 +739,55 @@ class JumpProposal(object):
         # forward-backward jump probability
         lqxy = (param.get_logpdf(x[self.pmap[str(param)]]) -
                 param.get_logpdf(q[self.pmap[str(param)]]))
+
+        return q, float(lqxy)
+
+    def draw_from_cw_prior2(self, x, iter, beta):
+
+        q = x.copy()
+        lqxy = 0
+
+        # draw parameter from signal model
+
+        para = "cw_cosinc"
+        if para in self.pnames:
+            idx = self.pnames.index(para)
+            q[idx] = np.random.uniform(-1.0, 1.0)
+
+        para = "cw_costheta"
+        if para in self.pnames:
+            idx = self.pnames.index(para)
+            q[idx] = np.random.uniform(-1.0, 1.0)
+
+        para = "cw_log10_Mc"
+        if para in self.pnames:
+            idx = self.pnames.index(para)
+            q[idx] = np.random.uniform(6.0, 10.0)
+
+        para = "cw_log10_fgw"
+        if para in self.pnames:
+            idx = self.pnames.index(para)
+            q[idx] = np.random.uniform(-9.0, -7.0)
+
+        para = "cw_log10_h"
+        if para in self.pnames:
+            idx = self.pnames.index(para)
+            q[idx] = np.random.uniform(-18.0, -11.0)
+
+        para = "cw_phase0"
+        if para in self.pnames:
+            idx = self.pnames.index(para)
+            q[idx] = np.random.uniform(0.0, 6.283185307179586)
+
+        para = "cw_phi"
+        if para in self.pnames:
+            idx = self.pnames.index(para)
+            q[idx] = np.random.uniform(0.0, 6.283185307179586)
+
+        para = "cw_psi"
+        if para in self.pnames:
+            idx = self.pnames.index(para)
+            q[idx] = np.random.uniform(0.0, 3.141592653589793)
 
         return q, float(lqxy)
 
@@ -1181,7 +1316,7 @@ def setup_sampler(pta, outdir='chains', resume=False,
         sampler.addProposalToCycle(jp.draw_from_cw_log_uniform_distribution, 10)
     if 'cw_log10_Mc' in pta.param_names:
         print('Adding CW prior draws...\n')
-        sampler.addProposalToCycle(jp.draw_from_cw_prior, 10)
+        sampler.addProposalToCycle(jp.draw_from_cw_prior2, 10)
         
     # SL uniform distribution draw
     if 'bin_orf_A1' in pta.param_names:

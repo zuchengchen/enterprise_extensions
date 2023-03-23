@@ -282,7 +282,7 @@ class HyperModel(object):
         # CW prior draw
         if 'cw_log10_Mc' in self.param_names:
             print('Adding CW prior draws...\n')
-            sampler.addProposalToCycle(jp.draw_from_cw_prior, 10)
+            sampler.addProposalToCycle(jp.draw_from_cw_prior2, 10)
 
         # Prior distribution draw for parameters named GW
         if any([str(p).split(':')[0] for p in list(self.params) if 'gw' in str(p)]):
@@ -329,6 +329,11 @@ class HyperModel(object):
         if 'log_sigma_sigwlog' in self.param_names:
             print('Adding log_sigma_sigwlog uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_log_sigma_sigwlog_uniform_distribution, 10)
+
+        # for domain wall
+        if 'log_A_sigwlog' in self.param_names:
+            print('Adding log_A_sigwlog uniform distribution draws...\n')
+            sampler.addProposalToCycle(jp.draw_from_log_A_sigwlog_uniform_distribution, 10)
 
 
 #         print('Adding alternative GW-polarization uniform distribution draws...\n')
