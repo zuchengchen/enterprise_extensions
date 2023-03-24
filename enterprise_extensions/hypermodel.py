@@ -336,15 +336,15 @@ class HyperModel(object):
             sampler.addProposalToCycle(jp.draw_from_DWDR_uniform_distribution, 10)
 
         if 'log_TS_SM' in self.param_names:
-            print('Adding domain wall DR uniform distribution draws...\n')
+            print('Adding domain wall SM uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_DWSM_uniform_distribution, 10)
 
         if 'log_TS_SM_2' in self.param_names:
-            print('Adding domain wall DR uniform distribution draws...\n')
+            print('Adding domain wall SM2 uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_DWSM2_uniform_distribution, 10)
 
         if 'log_TS_HA' in self.param_names:
-            print('Adding domain wall DR uniform distribution draws...\n')
+            print('Adding domain wall HA uniform distribution draws...\n')
             sampler.addProposalToCycle(jp.draw_from_DWHA_uniform_distribution, 10)
 
 

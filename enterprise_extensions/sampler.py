@@ -571,10 +571,10 @@ class JumpProposal(object):
 
         # draw parameter from signal model
         idx = self.pnames.index('log_TS_DR')
-        q[idx] = np.random.uniform(-3.0, 5.0)
+        q[idx] = np.random.uniform(np.log10(5e-4), 5.0)
         
         idx = self.pnames.index('log_dNeff_DR')
-        q[idx] = np.random.uniform(-3.0, np.log10(0.39))
+        q[idx] = np.random.uniform(-2.0, np.log10(0.39))
         
         idx = self.pnames.index('beta_DR')
         q[idx] = np.random.uniform(0.5, 1.0)
@@ -592,7 +592,7 @@ class JumpProposal(object):
 
         # draw parameter from signal model
         idx = self.pnames.index('log_TS_SM')
-        q[idx] = np.random.uniform(-4.0, 5.0)
+        q[idx] = np.random.uniform(np.log10(2.7e-3), 5.0)
         
         idx = self.pnames.index('log_aS_SM')
         q[idx] = np.random.uniform(-3.0, np.log10(0.3))
@@ -613,7 +613,7 @@ class JumpProposal(object):
 
         # draw parameter from signal model
         idx = self.pnames.index('log_TS_SM_2')
-        q[idx] = np.random.uniform(-4.0, 5.0)
+        q[idx] = np.random.uniform(np.log10(2.7e-3), 5.0)
         
         idx = self.pnames.index('log_sigma_SM_2')
         q[idx] = np.random.uniform(10, 18)
@@ -634,13 +634,13 @@ class JumpProposal(object):
 
         # draw parameter from signal model
         idx = self.pnames.index('log_TS_HA')
-        q[idx] = np.random.uniform(-4.0, 5.0)
+        q[idx] = np.random.uniform(np.log10(2.7e-3), 5.0)
         
         idx = self.pnames.index('log_Fa_HA')
         q[idx] = np.random.uniform(2, 9)
         
         idx = self.pnames.index('log_ma_HA')
-        q[idx] = np.random.uniform(-4, 4)
+        q[idx] = np.random.uniform(np.log10(4e-4), 4)
 
         idx = self.pnames.index('beta_HA')
         q[idx] = np.random.uniform(0.5, 1.0)
