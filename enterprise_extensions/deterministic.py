@@ -130,6 +130,7 @@ def cw_block_circ(amp_prior='log-uniform', dist_prior=None,
         phi = parameter.Constant(skyloc[1])(phi_name)
 
     if psrTerm:
+        # orbital phase
         p_phase = parameter.Uniform(0, 2 * np.pi)
         p_dist = parameter.Normal(0, 1)
     else:
@@ -266,7 +267,7 @@ def cw_delay(toas, pos, pdist,
         log10 of GW strain,
         used to compute distance, if not None
     :param phase0:
-        Initial Phase of GW source [radians]
+        Initial GW phase of source [radians]
     :param psi:
         Polarization angle of GW source [radians]
     :param psrTerm:
@@ -334,7 +335,7 @@ def cw_delay(toas, pos, pdist,
 
     # orbital frequency
     w0 = np.pi * fgw
-    phase0 /= 2  # orbital phase
+    phase0 /= 2  # convert GW to orbital phase
     # omegadot = 96/5 * mc**(5/3) * w0**(11/3) # Not currently used in code
 
     # evolution
